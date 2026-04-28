@@ -1,0 +1,51 @@
+﻿<Window x:Name="MainWindow1" x:Class="WarningManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WarningManager"
+        mc:Ignorable="d"
+        Title="Assembly Warning Manager" Height="450" Width="800">
+    <Grid>
+        <Rectangle Height="217" VerticalAlignment="Top" Fill="Silver"/>
+        <ComboBox x:Name="studentNameField" HorizontalAlignment="Center" Height="29" Margin="0,112,0,0" VerticalAlignment="Top" Width="608" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded"/>
+        <TextBlock HorizontalAlignment="Center" Height="28" Margin="0,79,0,0" TextWrapping="Wrap" Text="Enter member name" Width="353" VerticalAlignment="Top" TextAlignment="Center" FontSize="18"/>
+        <ListView x:Name="warningInformationBox" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding AssemblyMembers}" Margin="0,217,0,0" FontSize="14">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="170" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Warning Number" Width="150" DisplayMemberBinding="{Binding WarningNumber}"/>
+                    <GridViewColumn Header="Status" Width="190">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Padding="5,2" CornerRadius="3" HorizontalAlignment="Left">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Gray"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WarningLevel}" Value="Normal">
+                                                    <Setter Property="Background" Value="Gray"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding WarningLevel}" Value="Warned">
+                                                    <Setter Property="Background" Value="#FFCCCC00"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding WarningLevel}" Value="FinalWarning">
+                                                    <Setter Property="Background" Value="#F59E0B"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding WarningLevel}" Value="Ejected">
+                                                    <Setter Property="Background" Value="Red"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding WarningLevelTitle}" Foreground="White" FontWeight="SemiBold"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+    </Grid>
+</Window>

@@ -5,17 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WarningManager"
         mc:Ignorable="d"
-        Title="Assembly Warning Manager" Height="450" Width="800">
+        Title="אסיפה - מנהל אזהרות" Height="450" Width="800">
     <Grid>
         <Rectangle Height="217" VerticalAlignment="Top" Fill="Silver"/>
-        <ComboBox x:Name="studentNameField" HorizontalAlignment="Center" Height="29" Margin="0,112,0,0" VerticalAlignment="Top" Width="608" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded"/>
-        <TextBlock HorizontalAlignment="Center" Height="28" Margin="0,79,0,0" TextWrapping="Wrap" Text="Enter member name" Width="353" VerticalAlignment="Top" TextAlignment="Center" FontSize="18"/>
-        <ListView x:Name="warningInformationBox" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding AssemblyMembers}" Margin="0,217,0,0" FontSize="14">
+        <ComboBox x:Name="studentNameField" Height="29" Margin="0,57,96,0" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded" FlowDirection="RightToLeft" HorizontalAlignment="Right" Width="608"/>
+        <TextBlock Margin="224,24,224,0" TextWrapping="Wrap" Text="הקלד שם חבר" TextAlignment="Center" FontSize="18" Height="28" VerticalAlignment="Top"/>
+        <ListView x:Name="warningInformationBox" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding AssemblyMembers}" Margin="0,117,0,0" FontSize="14" FlowDirection="RightToLeft">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="170" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Warning Number" Width="150" DisplayMemberBinding="{Binding WarningNumber}"/>
-                    <GridViewColumn Header="Status" Width="190">
+                    <GridViewColumn Header="שם חבר" Width="170" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="אזהרה (מספר)" Width="150" DisplayMemberBinding="{Binding WarningNumber}"/>
+                    <GridViewColumn Header="מצב" Width="190">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Border Padding="5,2" CornerRadius="3" HorizontalAlignment="Left">

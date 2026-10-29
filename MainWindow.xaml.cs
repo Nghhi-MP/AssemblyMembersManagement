@@ -65,10 +65,10 @@ namespace WarningManager
                 {
                     switch (WarningLevel)
                     {
-                        case WarningLevel.Normal: return "Normal";
-                        case WarningLevel.Warned: return "Warned";
-                        case WarningLevel.FinalWarning: return "Final Warning";
-                        case WarningLevel.Ejected: return "EJECTED.";
+                        case WarningLevel.Normal: return "רגיל";
+                        case WarningLevel.Warned: return "מוזהר/ת";
+                        case WarningLevel.FinalWarning: return "אזהרה אחרונה";
+                        case WarningLevel.Ejected: return "בחוץ.";
                         default: return "???";
                     }
                 }

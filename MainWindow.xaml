@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WarningManager"
         mc:Ignorable="d"
-        Title="אסיפה - מנהל אזהרות" Height="450" Width="800">
+        Title="אסיפה - ישיבה" Height="450" Width="800">
     <Grid>
         <Rectangle Height="217" VerticalAlignment="Top" Fill="Silver"/>
         <ComboBox x:Name="studentNameField" Height="29" Margin="0,57,96,0" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded" FlowDirection="RightToLeft" HorizontalAlignment="Right" Width="608"/>
@@ -14,7 +14,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="שם חבר" Width="170" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="אזהרה (מספר)" Width="150" DisplayMemberBinding="{Binding WarningNumber}"/>
+                    <GridViewColumn Header="אזהרה (מספר)" Width="150" DisplayMemberBinding="{Binding WarningLevel}"/>
                     <GridViewColumn Header="מצב" Width="190">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -23,22 +23,25 @@
                                         <Style TargetType="Border">
                                             <Setter Property="Background" Value="Gray"/>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding WarningLevel}" Value="Normal">
+                                                <DataTrigger Binding="{Binding State}" Value="Normal">
                                                     <Setter Property="Background" Value="Gray"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding WarningLevel}" Value="Warned">
+                                                <DataTrigger Binding="{Binding State}" Value="Raising">
+                                                    <Setter Property="Background" Value="#FF009DFF"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="Warned">
                                                     <Setter Property="Background" Value="#FFCCCC00"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding WarningLevel}" Value="FinalWarning">
+                                                <DataTrigger Binding="{Binding State}" Value="InLastWarning">
                                                     <Setter Property="Background" Value="#F59E0B"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding WarningLevel}" Value="Ejected">
+                                                <DataTrigger Binding="{Binding State}" Value="Ejected">
                                                     <Setter Property="Background" Value="Red"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding WarningLevelTitle}" Foreground="White" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding StateTitle}" Foreground="White" FontWeight="SemiBold"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

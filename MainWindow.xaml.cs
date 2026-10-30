@@ -19,17 +19,18 @@ namespace WarningManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        public enum WarningLevel
+        public enum State
         {
             Normal = 0,
             Warned = 1,
-            FinalWarning = 2,
-            Ejected = 3
+            InLastWarning = 2,
+            Ejected = 3,
+            Raising
         }
         public class AssemblyMember : INotifyPropertyChanged
         {
             private string _name = string.Empty;
-            private WarningLevel _warningLevel;
+            private int _warningLevel = 0;
 
             public required string Name
             {
@@ -44,7 +45,7 @@ namespace WarningManager
                 }
             }
 
-            public WarningLevel WarningLevel
+            public int WarningLevel
             {
                 get => _warningLevel;
                 set
@@ -53,32 +54,68 @@ namespace WarningManager
                     {
                         _warningLevel = value;
                         OnPropertyChanged(nameof(WarningLevel));
-                        OnPropertyChanged(nameof(WarningNumber));
-                        OnPropertyChanged(nameof(WarningLevelTitle));
+                        OnPropertyChanged(nameof(State));
+                        OnPropertyChanged(nameof(StateTitle));
                     }
                 }
             }
 
-            public string WarningLevelTitle
+            //public string WarningLevelTitle
+            //{
+            //    get
+            //    {
+            //        return WarningLevel switch
+            //        {
+            //            0 => "רגיל",
+            //            1 => "מוזהר/ת",
+            //            2 => "באזהרה אחרונה",
+            //            3 => "בחוץ.",
+            //            _ => "???"
+            //        };
+            //    }
+            //}
+
+            public bool _IsRaising;
+            public bool IsRaising
+            {
+                get { return _IsRaising; }
+                set
+                {
+                    _IsRaising = value;
+                    OnPropertyChanged(nameof(IsRaising));
+                    OnPropertyChanged(nameof(State));
+                    OnPropertyChanged(nameof(StateTitle));
+                }
+            }
+
+            public State State
             {
                 get
                 {
-                    switch (WarningLevel)
+                    if (IsRaising) return State.Raising;
+                    else return WarningLevel switch
                     {
-                        case WarningLevel.Normal: return "רגיל";
-                        case WarningLevel.Warned: return "מוזהר/ת";
-                        case WarningLevel.FinalWarning: return "אזהרה אחרונה";
-                        case WarningLevel.Ejected: return "בחוץ.";
-                        default: return "???";
-                    }
+                        1 => State.Warned,
+                        2 => State.InLastWarning,
+                        3 => State.Ejected,
+                        _ => State.Normal
+                    };
                 }
             }
 
-            public int WarningNumber
+            public string StateTitle
             {
                 get
                 {
-                    return (int)WarningLevel;
+                    return State switch
+                    {
+                        State.Raising => "מצביע/ה",
+                        State.Normal => "רגיל",
+                        State.Warned => "מוזהר/ת",
+                        State.InLastWarning => "באזהרה אחרונה",
+                        State.Ejected => "מורחק/ת.",
+                        _ => "???"
+                    };
                 }
             }
 
@@ -129,6 +166,30 @@ namespace WarningManager
 
             switch (e.Key)
             {
+                case Key.F3:
+                    {
+                        if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember assemblyMember)
+                        {
+                            int index = AssemblyMembers.IndexOf(assemblyMember);
+                            if (index != 0)
+                            {
+                                AssemblyMembers.Move(index, index - 1);
+                            }
+                        }
+                    }
+                    break;
+                case Key.F2:
+                    {
+                        if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember assemblyMember)
+                        {
+                            int index = AssemblyMembers.IndexOf(assemblyMember);
+                            if (index < AssemblyMembers.Count - 1)
+                            {
+                                AssemblyMembers.Move(index, index + 1);
+                            }
+                        }
+                    }
+                    break;
                 case Key.Enter:
                     {
                         if (string.IsNullOrWhiteSpace(studentName)) return;
@@ -137,11 +198,42 @@ namespace WarningManager
                         {
                             if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember assemblyMember)
                             {
-                                if ((int)assemblyMember.WarningLevel < 1)
+                                if (assemblyMember.WarningLevel < 1)
                                 {
                                     AssemblyMembers.Remove(assemblyMember);
                                 }
                                 else assemblyMember.WarningLevel--;
+                            }
+                        }
+                        else if (Keyboard.IsKeyDown(Key.RightShift))
+                        {
+                            if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember assemblyMember)
+                            {
+                                int index = AssemblyMembers.IndexOf(assemblyMember);
+                                if (assemblyMember.IsRaising)
+                                {
+                                    if (!AssemblyMembers.Any(member => !member.IsRaising))
+                                    {
+                                        AssemblyMembers.Move(index, AssemblyMembers.Count - 1);
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < AssemblyMembers.Count; i++)
+                                        {
+                                            if (!AssemblyMembers[i].IsRaising)
+                                            {
+                                                AssemblyMembers.Move(index, i - 1);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    assemblyMember.IsRaising = false;
+                                }
+                                else
+                                {
+                                    assemblyMember.IsRaising = true;
+                                    AssemblyMembers.Move(index, 0);
+                                }
                             }
                         }
                         else
@@ -149,7 +241,7 @@ namespace WarningManager
 
                             if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember member)
                             {
-                                if ((int)member.WarningLevel >= 3)
+                                if (member.WarningLevel >= 3)
                                 {
 
                                 }
@@ -157,11 +249,11 @@ namespace WarningManager
                             }
                             else
                             {
-                                AssemblyMembers.Add(new() { Name = studentName, WarningLevel = WarningLevel.Warned });
+                                AssemblyMembers.Add(new() { Name = studentName });
                             }
                         }
+                        SelectItemInBox();
                     }
-                    SelectItemInBox();
                     break;
             }
 

@@ -250,6 +250,7 @@ namespace WarningManager
                             else
                             {
                                 AssemblyMembers.Add(new() { Name = studentName });
+                                studentNameField.SelectedIndex = AssemblyMembers.Count - 1;
                             }
                         }
                         SelectItemInBox();

@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WarningManager"
         mc:Ignorable="d"
+        FocusManager.FocusedElement="{Binding ElementName=studentNameField}"
         Title="אסיפה - ישיבה" Height="450" Width="800">
     <Grid>
-        <Rectangle Height="217" VerticalAlignment="Top" Fill="#FF5496FF"/>
+        <Rectangle Height="217" VerticalAlignment="Top" Fill="#FF009DFF"/>
         <ComboBox x:Name="studentNameField" Height="29" Margin="96,57,96,0" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded" FlowDirection="RightToLeft"/>
         <TextBlock Margin="224,24,224,0" TextWrapping="Wrap" Text="הקלד שם חבר" TextAlignment="Center" FontSize="18" Height="28" VerticalAlignment="Top" Foreground="White"/>
         <ListView x:Name="warningInformationBox" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding AssemblyMembers}" Margin="0,117,0,0" FontSize="14" FlowDirection="RightToLeft">
@@ -28,6 +29,9 @@
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding State}" Value="Raising">
                                                     <Setter Property="Background" Value="#FF009DFF"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="HasSpeakingAuthority">
+                                                    <Setter Property="Background" Value="#FF0082D2"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding State}" Value="Warned">
                                                     <Setter Property="Background" Value="#FFCCCC00"/>

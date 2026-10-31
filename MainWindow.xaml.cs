@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static WarningManager.MainWindow;
 
 namespace WarningManager
 {
@@ -25,7 +26,8 @@ namespace WarningManager
             Warned = 1,
             InLastWarning = 2,
             Ejected = 3,
-            Raising
+            Raising = 4,
+            HasSpeakingAuthority = 5
         }
         public class AssemblyMember : INotifyPropertyChanged
         {
@@ -87,12 +89,25 @@ namespace WarningManager
                     OnPropertyChanged(nameof(StateTitle));
                 }
             }
+            public bool _HasSpeakingAuthority;
+            public bool HasSpeakingAuthority
+            {
+                get { return _HasSpeakingAuthority; }
+                set
+                {
+                    _HasSpeakingAuthority = value;
+                    OnPropertyChanged(nameof(HasSpeakingAuthority));
+                    OnPropertyChanged(nameof(State));
+                    OnPropertyChanged(nameof(StateTitle));
+                }
+            }
 
             public State State
             {
                 get
                 {
-                    if (IsRaising) return State.Raising;
+                    if (HasSpeakingAuthority) return State.HasSpeakingAuthority;
+                    else if (IsRaising) return State.Raising;
                     else return WarningLevel switch
                     {
                         1 => State.Warned,
@@ -114,6 +129,7 @@ namespace WarningManager
                         State.Warned => "מוזהר/ת",
                         State.InLastWarning => "באזהרה אחרונה",
                         State.Ejected => "מורחק/ת.",
+                        State.HasSpeakingAuthority => "מחזיק/ה ברשות דיבור",
                         _ => "???"
                     };
                 }
@@ -159,7 +175,18 @@ namespace WarningManager
         {
             SelectItemInBox();
         }
-
+        private void MoveBehindRaising(int oldIndex, int padding = 0)
+        {
+            for (int i = 0; i < AssemblyMembers.Count; i++)
+            {
+                var member = AssemblyMembers[i];
+                if (!member.IsRaising && !member.HasSpeakingAuthority)
+                {
+                    AssemblyMembers.Move(oldIndex, i + padding);
+                    break;
+                }
+            }
+        }
         private void ComboBox_KeyDown(object sender, KeyEventArgs e)
         {
             string studentName = studentNameField.Text;
@@ -200,7 +227,6 @@ namespace WarningManager
                             {
                                 if (assemblyMember.WarningLevel < 1)
                                 {
-                                    AssemblyMembers.Remove(assemblyMember);
                                 }
                                 else assemblyMember.WarningLevel--;
                             }
@@ -218,21 +244,14 @@ namespace WarningManager
                                     }
                                     else
                                     {
-                                        for (int i = 0; i < AssemblyMembers.Count; i++)
-                                        {
-                                            if (!AssemblyMembers[i].IsRaising)
-                                            {
-                                                AssemblyMembers.Move(index, i - 1);
-                                                break;
-                                            }
-                                        }
+                                        MoveBehindRaising(index, -1);
                                     }
                                     assemblyMember.IsRaising = false;
                                 }
                                 else
                                 {
                                     assemblyMember.IsRaising = true;
-                                    AssemblyMembers.Move(index, 0);
+                                    MoveBehindRaising(index);
                                 }
                             }
                         }
@@ -254,6 +273,23 @@ namespace WarningManager
                             }
                         }
                         SelectItemInBox();
+                    }
+                    break;
+                case Key.F9:
+                    {
+                        if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember member)
+                        {
+                            MoveBehindRaising(AssemblyMembers.IndexOf(member));
+                            member.HasSpeakingAuthority = !member.HasSpeakingAuthority;
+                        }
+                    }
+                    break;
+                case Key.F1:
+                    {
+                        if (AssemblyMembers.FirstOrDefault(member => member.Name == studentName) is AssemblyMember member)
+                        {
+                            AssemblyMembers.Remove(member);
+                        }
                     }
                     break;
             }

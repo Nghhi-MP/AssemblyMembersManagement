@@ -8,7 +8,7 @@
         Title="אסיפה - ישיבה" Height="450" Width="800">
     <Grid>
         <Rectangle Height="217" VerticalAlignment="Top" Fill="Silver"/>
-        <ComboBox x:Name="studentNameField" Height="29" Margin="0,57,96,0" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded" FlowDirection="RightToLeft" HorizontalAlignment="Right" Width="608"/>
+        <ComboBox x:Name="studentNameField" Height="29" Margin="96,57,96,0" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding AssemblyMembers}" DisplayMemberPath="Name" FontSize="16" KeyDown="ComboBox_KeyDown" Loaded="ComboBox_Loaded" FlowDirection="RightToLeft"/>
         <TextBlock Margin="224,24,224,0" TextWrapping="Wrap" Text="הקלד שם חבר" TextAlignment="Center" FontSize="18" Height="28" VerticalAlignment="Top"/>
         <ListView x:Name="warningInformationBox" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding AssemblyMembers}" Margin="0,117,0,0" FontSize="14" FlowDirection="RightToLeft">
             <ListView.View>

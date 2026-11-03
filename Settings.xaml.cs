@@ -24,21 +24,15 @@ namespace SessionMembersOrder
         {
             InitializeComponent();
 
-            if (!SettingsFile.DataFile.Exists)
-            {
-                File.WriteAllText(SettingsFile.DataFile.FullName, JsonSerializer.Serialize<SettingsFile>(new()));
-            }
-
-            var json = JsonSerializer.Deserialize<SettingsFile>(File.ReadAllText(SettingsFile.DataFile.FullName));
-
-            HoursBox.Text = json?.CommencementTime[0].ToString() ?? "--";
-            MinutesBox.Text = json?.CommencementTime[1].ToString() ?? "--";
+            HoursBox.Text = SettingsFile.Settings?.CommencementTime[0].ToString() ?? "--";
+            MinutesBox.Text = SettingsFile.Settings?.CommencementTime[1].ToString() ?? "--";
         }
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var settings = JsonSerializer.Deserialize<SettingsFile>(File.ReadAllText(SettingsFile.DataFile.FullName));
+
+            var settings = SettingsFile.Settings;
 
             if (settings == null)
                 return;
@@ -52,7 +46,7 @@ namespace SessionMembersOrder
                 settings.CommencementTime[1] = minutes;
             }
 
-            File.WriteAllText(SettingsFile.DataFile.FullName, JsonSerializer.Serialize(settings));
+            SettingsFile.Settings = settings;
 
             Close();
         }

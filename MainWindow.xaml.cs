@@ -2,23 +2,11 @@
 using SessionMembersOrder;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using static WarningManager.MainWindow;
-using Timer = System.Timers.Timer;
 
 namespace WarningManager
 {
@@ -155,10 +143,9 @@ namespace WarningManager
         public static Color AssemblyBlue => Color.FromRgb(0, 157, 255);
 
         public static TimeOnly CommencementTime => TimeOnly.FromDateTime(DateTime.Now);
-        //public TimeOnly ConclusionTime = new(JsonSerializer.Deserialize<SettingsFile>(SettingsFile.FileContents)?.CommencementTime[0] ?? 10, JsonSerializer.Deserialize<SettingsFile>(SettingsFile.FileContents)?.CommencementTime[1] ?? 45);
-        public TimeOnly ConclusionTime = new(11,30);
+        public static TimeOnly ConclusionTime => new(SettingsFile.Settings?.CommencementTime[0] ?? 11, SettingsFile.Settings?.CommencementTime[1] ?? 30);
         public int? SubjectsAmount = null;
-        public TimeSpan SessionLength => ConclusionTime - CommencementTime;
+        public static TimeSpan SessionLength => ConclusionTime - CommencementTime;
         public DispatcherTimer SubjectTimer = new()
         {
             Interval = TimeSpan.FromSeconds(1)

@@ -6,18 +6,18 @@
         xmlns:local="clr-namespace:SessionMembersOrder"
         mc:Ignorable="d"
         FlowDirection="RightToLeft"
-        Title="Settings" Height="254" Width="342">
+        Title="הגדרות" Height="254" Width="342">
     <Grid Background="#FF009DFF">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="461*"/>
             <ColumnDefinition Width="242*"/>
         </Grid.ColumnDefinitions>
         <Rectangle Fill="#FF6AA9FF" Margin="1,0,0,0" Height="212" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-        <Label Content="שעת סיכום ישיבות" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="180" Foreground="White" FontFamily="Segoe UI Variable Display"/>
-        <TextBox x:Name="MinutesBox" HorizontalAlignment="Left" Height="20" Margin="10,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="24"/>
-        <TextBox x:Name="HoursBox" HorizontalAlignment="Left" Height="20" Margin="39,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="24"/>
-        <Label Content=":" HorizontalAlignment="Left" Margin="30,42,0,0" VerticalAlignment="Top" Width="18" Foreground="Black" FontFamily="Segoe UI Variable Display"/>
-        <Button Content="[Enter]" IsDefault="True" HorizontalAlignment="Left" Height="22" Margin="126,198,0,0" VerticalAlignment="Top" Width="92" Click="Button_Click"/>
+        <Label Content="שעת סיכום ישיבות" Margin="10,20,34,0" VerticalAlignment="Top" Foreground="White" FontFamily="Segoe UI Variable Display"/>
+        <TextBox x:Name="MinutesBox" Height="20" Margin="10,46,171,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox x:Name="HoursBox" Height="20" Margin="0,46,116,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="43"/>
+        <Label Content=":" Margin="0,42,153,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Segoe UI Variable Display" RenderTransformOrigin="1.724,0.56" HorizontalAlignment="Right" Width="18"/>
+        <Button Content="[Enter]" IsDefault="True" Height="22" Margin="0,187,6,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="92"/>
 
     </Grid>
 </Window>

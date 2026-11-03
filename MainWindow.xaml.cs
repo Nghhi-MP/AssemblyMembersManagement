@@ -214,12 +214,14 @@ namespace WarningManager
 
             if (SubjectsAmount == 1)
             {
-                SubjectNameLbl.Text = $"נותר נושא אחרון.";
+                SubjectNameLbl.Text = $"הנושא האחרון";
                 SubjectNameLbl.Foreground = new SolidColorBrush(Colors.Yellow);
             }
             else
             {
-                SubjectNameLbl.Text = $"{SubjectsAmount} נושאים נותרו.";
+                SubjectNameLbl.Text = $"נושא מספר {SubjectsAmount}";
+                //SubjectNameLbl.Text = $"הנושא ה־{SubjectsAmount}.";
+                //SubjectNameLbl.Text = $"נושא {SubjectsAmount}";
                 SubjectNameLbl.Foreground = new SolidColorBrush(Colors.White);
             }
 
@@ -246,7 +248,7 @@ namespace WarningManager
 
                 input.EnterButton.Click += (sender, args) =>
                 {
-                    if (!int.TryParse(input.InputField.Text, out int subjectsAmount) || subjectsAmount < 0) return;
+                    if (!int.TryParse(input.InputField.Text, out int subjectsAmount) || subjectsAmount <= 0) return;
                     SubjectsAmount = subjectsAmount;
                     SubjectTimerBtn_Click(sender, args);
                 };

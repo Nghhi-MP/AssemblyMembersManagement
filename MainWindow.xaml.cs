@@ -1,5 +1,4 @@
 ﻿using SAQu;
-using SessionMembersOrder;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -140,146 +139,11 @@ namespace WarningManager
 
         public ObservableCollection<AssemblyMember> AssemblyMembers { get; set; } = [];
 
-        public static Color AssemblyBlue => Color.FromRgb(0, 157, 255);
-
-        public static TimeOnly CommencementTime => TimeOnly.FromDateTime(DateTime.Now);
-        public static TimeOnly ConclusionTime => new(SettingsFile.Settings?.CommencementTime[0] ?? 11, SettingsFile.Settings?.CommencementTime[1] ?? 30);
-        public int? SubjectsAmount = null;
-        public static TimeSpan SessionLength => ConclusionTime - CommencementTime;
-        public DispatcherTimer SubjectTimer = new()
-        {
-            Interval = TimeSpan.FromSeconds(1)
-        };
-        public TimeSpan? SubjectTimer_Destination = null;
-        public TimeSpan SubjectTimer_Passed = TimeSpan.Zero;
-
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
 
-            SubjectTimer.Tick += SubjectTimer_Tick;
-
-        }
-
-        private void SubjectTimer_LblUpdate()
-        {
-            if (SubjectTimer_Passed <= TimeSpan.FromSeconds(11))
-            {
-                TimerLbl.Foreground = new SolidColorBrush(Colors.Red);
-            }
-            else
-            {
-                TimerLbl.Foreground = new SolidColorBrush(AssemblyBlue);
-            }
-            TimerLbl.Text = $"{SubjectTimer_Passed.Minutes} : {SubjectTimer_Passed.Seconds}";
-        }
-
-        private void SubjectTimer_Tick(object? sender, EventArgs e)
-        {
-            SubjectTimer_Passed -= TimeSpan.FromSeconds(1);
-
-            SubjectTimer_LblUpdate();
-
-            if (SubjectTimer_Passed <= TimeSpan.Zero)
-            {
-                SubjectTimer.Stop();
-                if (SubjectsAmount == 1)
-                {
-                    SubjectNameLbl.Text = "על הישיבה להסתכם.";
-                }
-            }
-        }
-
-        private void SubjectTimer_Reset()
-        {
-            SubjectsAmount = null;
-            SubjectTimer_Passed = TimeSpan.Zero;
-            SubjectTimer.Stop();
-            SubjectTimerBtn.Content = "התחל נושא";
-            TimerLbl.Text = "0 : 0";
-            SubjectNameLbl.Text = "";
-            ConcludeSubjectBtn.Visibility = Visibility.Hidden;
-        }
-
-        private void SubjectTimer_Start()
-        {
-            SubjectTimer_Destination = SessionLength / SubjectsAmount!.Value;
-
-            SubjectTimer_Passed = SubjectTimer_Destination.Value;
-
-            SubjectTimer_LblUpdate();
-
-            SubjectTimer.Start();
-
-            if (SubjectsAmount == 1)
-            {
-                SubjectNameLbl.Text = $"הנושא האחרון";
-                SubjectNameLbl.Foreground = new SolidColorBrush(Colors.Yellow);
-            }
-            else
-            {
-                SubjectNameLbl.Text = $"נושא מספר {SubjectsAmount}";
-                //SubjectNameLbl.Text = $"הנושא ה־{SubjectsAmount}.";
-                //SubjectNameLbl.Text = $"נושא {SubjectsAmount}";
-                SubjectNameLbl.Foreground = new SolidColorBrush(Colors.White);
-            }
-
-            SubjectTimerBtn.Content = "איפוס";
-
-            ConcludeSubjectBtn.Visibility = Visibility.Visible;
-        }
-
-        private void SubjectTimerBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (SessionLength < TimeSpan.Zero)
-            {
-                MessageBox.Show("The Session's length is out of it's currently set bounds in the code!", Title, MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (SubjectsAmount == null)
-            {
-                var input = new InputBox()
-                {
-                    Title = Title
-                };
-                input.CaptionBlock.Text = "כתוב את כמות הנושאים:";
-
-                input.EnterButton.Click += (sender, args) =>
-                {
-                    if (!int.TryParse(input.InputField.Text, out int subjectsAmount) || subjectsAmount <= 0) return;
-                    SubjectsAmount = subjectsAmount;
-                    SubjectTimerBtn_Click(sender, args);
-                };
-
-                input.ShowDialog();
-
-                return;
-            }
-
-            if (SubjectTimer_Passed > TimeSpan.Zero)
-            {
-                SubjectTimer_Reset();
-                return;
-            }
-
-            SubjectTimer_Start();
-
-        }
-
-        private void ConcludeSubjectBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (SubjectsAmount > 1)
-            {
-                SubjectsAmount -= 1;
-                SubjectTimer.Stop();
-                SubjectTimer_Start();
-            }
-            else
-            {
-                SubjectTimer_Reset();
-            }
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
@@ -426,18 +290,6 @@ namespace WarningManager
                     break;
             }
 
-        }
-
-        private void MainWindow1_Closed(object sender, EventArgs e)
-        {
-            SubjectTimer.Stop();
-            Close();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            new Settings()
-                .ShowDialog();
         }
     }
 }
